@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h2>Payday 3 Codelock Permutation Tool</h2>
+    <form id="permutationForm">
+      <p>Enter the digits you want to generate permutations for:</p>
+      <input type="text" name="fourDigitInput" pattern="\d{4}" maxlength="4" placeholder="Examples: 1234 , 0023" required/>
+      <button type="button" onclick="generatePermutations()">Generate Permutations</button>
+    </form>
+
+    <h3>Permutations:</h3>
+    <p id="permutationsList"></p>
+    <p id="result"></p>
+    
+    <script>
+      function generatePermutations() {
+        const input = document.querySelector('input[name="fourDigitInput"]');
+        const inputValue = input.value;
+
+        if (/^\d{4}$/.test(inputValue)) {
+          const digits = inputValue.split("").map(Number);
+          const permutations = getPermutations(digits);
+          const uniquePermutations = [...new Set(permutations)]; // Remove duplicates
+          const permutationsList = document.getElementById("permutationsList");
+          permutationsList.innerHTML = "";
+
+          for (const permutation of uniquePermutations) {
+            const li = document.createElement("li");
+            li.textContent = permutation;
+            permutationsList.appendChild(li);
+          }
+
+          document.getElementById("result").textContent = `${uniquePermutations.length} permutations generated.`;
+        } else {
+          alert("Please enter a 4-digit number.");
+        }
+      }
+
+      function getPermutations(digits) {
+        const result = [];
+
+        function generatePermutations(arr, current = []) {
+          if (arr.length === 0) {
+            result.push(current.join(""));
+            return;
+          }
+
+          for (let i = 0; i < arr.length; i++) {
+            const remaining = [...arr.slice(0, i), ...arr.slice(i + 1)];
+            generatePermutations(remaining, [...current, arr[i]]);
+          }
+        }
+
+        generatePermutations(digits);
+        return result;
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+    body {
+      text-align: center;
+      background-color: #222;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+  
+    h2 {
+      color: #4CAF50;
+    }
+  
+    form {
+      margin: 20px;
+    }
+  
+    p {
+      color: #ccc;
+    }
+  
+    input {
+      padding: 10px;
+      border: none;
+      background-color: #333;
+      color: #fff;
+      border-radius: 5px;
+    }
+  
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  
+    h3 {
+      color: #4CAF50;
+      margin-top: 20px;
+    }
+  
+    #permutationsList {
+      list-style-type: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 4 columns per row */
+      grid-gap: 5px; /* Reduced spacing between list items */
+    }
+  
+    li {
+      font-size: 1.2em; /* Increased font size for list items */
+      letter-spacing: 4px; /* Added letter-spacing to create space among digits */
+    }
+  
+    #result {
+      color: #ccc;
+      margin: 10px;
+    }
+  </style>
+  
